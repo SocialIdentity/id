@@ -1,0 +1,38 @@
+[workspace]
+members = [
+    "packages/*",
+    "contracts/*"
+]
+[workspace.package]
+version = "0.1.0"
+authors = ["PFC <PFC-Validator@protonmail.com>"]
+edition = "2021"
+license = "UNLICENSED"
+homepage = "https://pfc-validator.github.io/"
+repository = "https://github.com/SocialIdentity/id"
+documentation = "https://github.com/SocialIdentity/id#README"
+keywords = ["blockchain", "cosmos", "cosmwasm"]
+
+[workspace.dependencies]
+cosmwasm-schema = "1.1"
+cosmwasm-std = "1.1"
+cw2 = "0.16"
+cw-controllers = "0.16"
+cw-storage-plus = "0.16"
+cw-utils = "0.16"
+thiserror = "1.0"
+semver="1"
+
+[profile.release.package.id-types]
+codegen-units = 1
+incremental = false
+
+
+[profile.release]
+rpath = false
+lto = true
+overflow-checks = true
+opt-level = 3
+debug = false
+debug-assertions = false
+

@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+# Build results
+target/
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Text file backups
+**/*.rs.bk
+
+# Auto-gen
+.cargo-ok
+
+# Build artifacts
+*.wasm
+hash.txt
+contracts.txt
+artifacts/
+
+packages/*/schema
+contracts/*/schema
+/schema
