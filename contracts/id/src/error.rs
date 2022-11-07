@@ -1,6 +1,6 @@
 use cosmwasm_std::{OverflowError, StdError};
-use thiserror::Error;
 use cw_controllers::AdminError;
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ContractError {
@@ -13,17 +13,12 @@ pub enum ContractError {
     #[error("{0}")]
     AdminError(#[from] AdminError),
 
-    #[error("unauthorized: {reason}")]
+    #[error("ID: Unauthorized (action: {action:?}, expected: {expected:?}, actual: {actual:?})")]
     Unauthorized {
-        reason: String,
+        action: String,
+        expected: String,
+        actual: String,
     },
-
-}
-
-impl ContractError {
-    pub fn unauthorized(reason: impl ToString) -> Self {
-        Self::Unauthorized {
-            reason: reason.to_string(),
-        }
-    }
+    #[error("ID: No pending ownership change")]
+    NoPendingOwnerChanges,
 }

@@ -1,0 +1,16 @@
+{
+  "add_directory": {
+    "name": "lns",
+    "contract": "terra1zl866qkqmwygzcr8xwqa70mep0raqt40ddqhu9ur3yguekg7g3xq6ctmw4",
+    "ens_type": "LNS",
+    "logo": {
+      "url": "https://app.lns.money/favicon.png"
+    },
+    "socials": {
+      "project": "LNS",
+      "description": "Luna Name Service",
+      "twitter": "@lns_money",
+      "web": "https://app.lns.money/luna"
+    }
+  }
+}

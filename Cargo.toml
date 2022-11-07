@@ -1,7 +1,7 @@
 [workspace]
 members = [
-    "packages/*",
-    "contracts/*"
+  "packages/*",
+  "contracts/*"
 ]
 [workspace.package]
 version = "0.1.0"
@@ -17,11 +17,17 @@ keywords = ["blockchain", "cosmos", "cosmwasm"]
 cosmwasm-schema = "1.1"
 cosmwasm-std = "1.1"
 cw2 = "0.16"
+cw20 = "0.16.0"
+cw721 = "0.16.0"
 cw-controllers = "0.16"
 cw-storage-plus = "0.16"
 cw-utils = "0.16"
+hex = "0.4.3"
 thiserror = "1.0"
-semver="1"
+semver = "1"
+pfc-fee-split = "0.1.1"
+#rust-crypto = {version =  "0.2.36", default-features =false}
+sha3 = {version = "0.10.6", default-features = false}
 
 [profile.release.package.id-types]
 codegen-units = 1

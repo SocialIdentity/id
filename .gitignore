@@ -22,3 +22,5 @@ artifacts/
 packages/*/schema
 contracts/*/schema
 /schema
+
+/notes.txt

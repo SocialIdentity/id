@@ -9,7 +9,7 @@ This smart contract manages the identity across multiple chains.
 * sync-chain(chain-id)
 
 ### Privileged
-* add-identity(chain-id, identity, wallet)  -- add a identity/wallet pair for a different chain
-* add-identity(identity, wallet) -- defaults to current chain
-* remove-identity(chain-id,identity,wallet)
-* remove-identity(identity,wallet)
+* add-connection(chain-id, identity, wallet)  -- add a identity/wallet pair for a different chain
+* add-connection(identity, wallet) -- defaults to current chain
+* remove-connection(chain-id,identity,wallet)
+* remove-connection(identity,wallet)

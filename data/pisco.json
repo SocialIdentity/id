@@ -1,0 +1,10 @@
+{
+  "admin": "terra1yt8xwehw3mngc7h2z09utf32cgpdpe09lke902",
+  "fee": {
+    "denom": "uluna",
+    "amount": "5"
+  },
+  "fee_account_type": "Wallet",
+  "fee_account": "terra1yt8xwehw3mngc7h2z09utf32cgpdpe09lke902"
+}
+

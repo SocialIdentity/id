@@ -1,0 +1,45 @@
+[package]
+name = "directory"
+description = "Directory Contract"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+documentation = { workspace = true }
+keywords = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+backtraces = ["cosmwasm-std/backtraces"]
+library = []
+
+[dependencies]
+cosmwasm-std = { workspace = true }
+cosmwasm-schema = { workspace = true }
+cw2 = { workspace = true }
+cw20 = { workspace = true }
+cw721 = {workspace = true }
+cw-storage-plus = { workspace = true }
+cw-controllers = { workspace = true }
+cw-utils = { workspace = true }
+thiserror = { workspace = true }
+semver = { workspace = true }
+id-types = { path = "../../packages/types" }
+pfc-fee-split = { workspace = true }
+sha3 = {workspace = true, default-features=false }
+hex = {workspace = true}
+
+
+[package.metadata.scripts]
+optimize = """docker run --rm -v "$(pwd)":/code \
+          --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+              cosmwasm/rust-optimizer:0.12.9"""
+optimize-w32 = """docker run --rm -v c:\\pfc\\SocialIdentity\\id:/code  \
+            --mount type=volume,source=socialid_id_cache,target=/code/target \
+            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+            cosmwasm/rust-optimizer:0.12.9"""
