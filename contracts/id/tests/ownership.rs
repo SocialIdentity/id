@@ -1,43 +1,10 @@
-use cosmwasm_std::{
-    testing::{mock_dependencies, mock_env, mock_info, MockApi, MockQuerier, MockStorage},
-    Api, Empty, Env, OwnedDeps,
-};
-
-use id::{contract, execute, query, ContractError};
-use id_types::id::{ConfigResponse, InstantiateMsg};
+mod common;
+use crate::common::setup_test;
+use cosmwasm_std::testing::{mock_env, mock_info};
+use cosmwasm_std::Api;
+use id::{execute, query, ContractError};
+use id_types::id::ConfigResponse;
 use id_types::shared::NewOwner;
-
-fn setup_test(env: Env) -> OwnedDeps<MockStorage, MockApi, MockQuerier, Empty> {
-    let mut deps = mock_dependencies();
-
-    contract::instantiate(
-        deps.as_mut(),
-        env,
-        mock_info("john", &[]),
-        InstantiateMsg {
-            admin: Some("john".into()),
-        },
-    )
-    .unwrap();
-
-    deps
-}
-
-#[test]
-fn initializing() {
-    let env = mock_env();
-
-    let deps = setup_test(env);
-
-    let cfg = query::config(deps.as_ref()).unwrap();
-    assert_eq!(
-        cfg,
-        ConfigResponse {
-            owner: Some(deps.api.addr_validate("john").unwrap()),
-            new_owner: None,
-        },
-    );
-}
 
 #[test]
 fn transferring_ownership() {

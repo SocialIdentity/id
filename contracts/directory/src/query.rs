@@ -87,6 +87,7 @@ pub fn entries_owner(
         .collect::<StdResult<Vec<DirectoryRecord>>>()?;
     Ok(DirectoryResponse { entries: res })
 }
+
 pub fn reverse_record(deps: Deps, address: String) -> StdResult<ENSResponse> {
     let mut responses: Vec<ENSRecord> = vec![];
     deps.api.addr_validate(&address)?;
@@ -192,4 +193,21 @@ pub(crate) fn gen_reverse_query_msg(
         msg: to_binary(&qry)?,
     });
     Ok(qry_req)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn token_id_generation() {
+        assert_eq!(
+            "583efd4da3651e5cbfa095071e4c0e55444062dace38466cb1056e555c7bd5d6",
+            gen_token_id(&EnsType::Lns, "abcd1234567").unwrap()
+        );
+        assert_eq!(
+            "abcd1234567",
+            gen_token_id(&EnsType::Cw721, "abcd1234567").unwrap()
+        );
+    }
 }

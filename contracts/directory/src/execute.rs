@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use cosmwasm_std::{
-    Addr, BankMsg, Coin, CosmosMsg, DepsMut, Env, Event, MessageInfo, Response, StdError,
+    BankMsg, Coin, CosmosMsg, DepsMut, Env, Event, MessageInfo, Response, StdError,
 };
 use cw20::Logo;
 
@@ -33,11 +33,14 @@ pub fn instantiate(mut deps: DepsMut, msg: InstantiateMsg) -> Result<Response, C
 pub fn transfer_ownership(
     deps: DepsMut,
     env: Env,
-    sender: Addr,
+    info: MessageInfo,
     new_owner: String,
     blocks: u64,
 ) -> Result<Response, ContractError> {
-    ADMIN.assert_admin(deps.as_ref(), &sender)?;
+    ADMIN.assert_admin(deps.as_ref(), &info.sender)?;
+    if !info.funds.is_empty() {
+        return Err(ContractError::NoFundsRequired {});
+    }
     let new_admin = deps.api.addr_validate(&new_owner)?;
 
     let new_admin_record = NewOwner {
@@ -49,15 +52,22 @@ pub fn transfer_ownership(
     Ok(Response::new().add_attribute("action", format!("{}/transfer_ownership", CONTRACT_NAME)))
 }
 
-pub fn accept_ownership(deps: DepsMut, env: Env, sender: Addr) -> Result<Response, ContractError> {
+pub fn accept_ownership(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+) -> Result<Response, ContractError> {
+    if !info.funds.is_empty() {
+        return Err(ContractError::NoFundsRequired {});
+    }
     let new_admin_record_o = NEW_ADMIN.may_load(deps.storage)?;
 
     if let Some(new_admin_record) = new_admin_record_o {
-        if new_admin_record.new_owner != sender {
+        if new_admin_record.new_owner != info.sender {
             return Err(ContractError::Unauthorized {
                 action: "accept_ownership".to_string(),
                 expected: new_admin_record.new_owner.to_string(),
-                actual: sender.to_string(),
+                actual: info.sender.to_string(),
             });
         }
 
@@ -73,7 +83,7 @@ pub fn accept_ownership(deps: DepsMut, env: Env, sender: Addr) -> Result<Respons
         ADMIN.set(deps, Some(new_admin_record.new_owner))?;
 
         let event = Event::new(format!("{}/ownership_transferred", CONTRACT_NAME))
-            .add_attribute("new_owner", sender.to_string());
+            .add_attribute("new_owner", info.sender.to_string());
 
         Ok(Response::new()
             .add_event(event)
@@ -155,6 +165,9 @@ pub fn remove_directory_entry(
     info: MessageInfo,
     name: String,
 ) -> Result<Response, ContractError> {
+    if !info.funds.is_empty() {
+        return Err(ContractError::NoFundsRequired {});
+    }
     let entry_exists = directory().may_load(deps.storage, name.clone())?;
     if let Some(entry) = entry_exists {
         if info.sender == entry.owner || ADMIN.is_admin(deps.as_ref(), &info.sender)? {
@@ -186,18 +199,21 @@ pub fn update_directory_entry(
     socials: Option<Socials>,
     new_owner: Option<String>,
 ) -> Result<Response, ContractError> {
+    if !info.funds.is_empty() {
+        return Err(ContractError::NoFundsRequired {});
+    }
     let entry_exists = directory().may_load(deps.storage, name.clone())?;
     let is_admin = ADMIN.is_admin(deps.as_ref(), &info.sender)?;
 
     if let Some(mut entry) = entry_exists {
         if info.sender == entry.owner || is_admin {
             if let Some(new_owner_string) = new_owner {
-                if is_admin {
-                    let new_owner_addr = deps.api.addr_validate(&new_owner_string)?;
-                    entry.owner = new_owner_addr;
-                }
+                let new_owner_addr = deps.api.addr_validate(&new_owner_string)?;
+                entry.owner = new_owner_addr;
             }
+
             let contract_addr = deps.api.addr_validate(&contract)?;
+
             let ens = EnsType::from_str(&ens_type)
                 .map_err(|_| StdError::generic_err("Invalid ENS type"))?;
             entry.contract = contract_addr;
@@ -230,6 +246,9 @@ pub fn update_listing_fee(
     fee: Coin,
 ) -> Result<Response, ContractError> {
     ADMIN.assert_admin(deps.as_ref(), &info.sender)?;
+    if !info.funds.is_empty() {
+        return Err(ContractError::NoFundsRequired {});
+    }
     let mut fee_config = FEE.load(deps.storage)?;
     fee_config.fee = fee;
     FEE.save(deps.storage, &fee_config)?;
@@ -247,6 +266,11 @@ pub fn update_listing_fee_account(
     fee_account: String,
 ) -> Result<Response, ContractError> {
     ADMIN.assert_admin(deps.as_ref(), &info.sender)?;
+
+    if !info.funds.is_empty() {
+        return Err(ContractError::NoFundsRequired {});
+    }
+
     let fee_type = FeeType::from_str(&fee_account_type)
         .map_err(|_| StdError::generic_err("Invalid Fee type: None, Wallet or FeeSplit only"))?;
     let fee_account_addr = deps.api.addr_validate(&fee_account)?;

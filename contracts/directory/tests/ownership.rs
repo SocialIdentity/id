@@ -1,52 +1,13 @@
+mod common;
+use crate::common::{setup_test, ADMIN_NAME, REGULAR_USER_NAME};
+use cosmwasm_std::Api;
 use cosmwasm_std::{
-    testing::{mock_dependencies, mock_env, mock_info, MockApi, MockQuerier, MockStorage},
-    Api, Coin, Empty, Env, OwnedDeps,
+    testing::{mock_env, mock_info},
+    Coin,
 };
-
-use directory::{contract, execute, query, ContractError};
-use id_types::directory::{ConfigResponse, FeeConfig, FeeType, InstantiateMsg};
+use directory::{execute, query, ContractError};
+use id_types::directory::{ConfigResponse, FeeConfig, FeeType};
 use id_types::shared::NewOwner;
-
-fn setup_test(env: Env) -> OwnedDeps<MockStorage, MockApi, MockQuerier, Empty> {
-    let mut deps = mock_dependencies();
-
-    contract::instantiate(
-        deps.as_mut(),
-        env,
-        mock_info("john", &[]),
-        InstantiateMsg {
-            admin: Some("john".into()),
-            fee: Coin::new(5u128, "udenom"),
-
-            fee_account_type: "Wallet".to_string(),
-            fee_account: "fee_wallet".to_string(),
-        },
-    )
-    .unwrap();
-
-    deps
-}
-
-#[test]
-fn initializing() {
-    let env = mock_env();
-
-    let deps = setup_test(env);
-
-    let cfg = query::config(deps.as_ref()).unwrap();
-    assert_eq!(
-        cfg,
-        ConfigResponse {
-            owner: Some(deps.api.addr_validate("john").unwrap()),
-            new_owner: None,
-            fees: FeeConfig {
-                fee_account_type: FeeType::Wallet,
-                fee_account: deps.api.addr_validate("fee_wallet").unwrap(),
-                fee: Coin::new(5u128, "udenom")
-            }
-        },
-    );
-}
 
 #[test]
 fn transferring_ownership() {
@@ -54,12 +15,12 @@ fn transferring_ownership() {
 
     let mut deps = setup_test(env.clone());
 
-    // only owner can propose ownership transferrs
+    // only owner can propose ownership transfers
     {
         let err = execute::transfer_ownership(
             deps.as_mut(),
             env.clone(),
-            mock_info("plastic", &[]).sender,
+            mock_info("plastic", &[]),
             "plastic".into(),
             500,
         )
@@ -75,8 +36,8 @@ fn transferring_ownership() {
         execute::transfer_ownership(
             deps.as_mut(),
             env.clone(),
-            mock_info("john", &[]).sender,
-            "jake".into(),
+            mock_info(ADMIN_NAME, &[]),
+            REGULAR_USER_NAME.into(),
             500,
         )
         .unwrap();
@@ -85,7 +46,7 @@ fn transferring_ownership() {
         assert_eq!(
             cfg.new_owner,
             Some(NewOwner {
-                new_owner: deps.api.addr_validate("jake").unwrap(),
+                new_owner: deps.api.addr_validate(REGULAR_USER_NAME).unwrap(),
                 block_height: env.block.height + 500
             })
         );
@@ -100,9 +61,8 @@ fn accepting_ownership() {
 
     // attempt to accept ownership when there isn't a pending ownership transfer yet
     {
-        let err =
-            execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("plastic", &[]).sender)
-                .unwrap_err();
+        let err = execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("plastic", &[]))
+            .unwrap_err();
         match err {
             ContractError::NoPendingOwnerChanges { .. } => {}
             _ => assert!(false, "{}", err),
@@ -112,17 +72,16 @@ fn accepting_ownership() {
     execute::transfer_ownership(
         deps.as_mut(),
         env.clone(),
-        mock_info("john", &[]).sender,
-        "jake".into(),
+        mock_info(ADMIN_NAME, &[]),
+        REGULAR_USER_NAME.into(),
         1000,
     )
     .unwrap();
 
     // only the pending owner can accept ownership
     {
-        let err =
-            execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("pumpkin", &[]).sender)
-                .unwrap_err();
+        let err = execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("pumpkin", &[]))
+            .unwrap_err();
         match err {
             ContractError::Unauthorized { .. } => {}
             _ => assert!(false, "{}", err),
@@ -131,13 +90,13 @@ fn accepting_ownership() {
 
     // the pending owner properly accepts ownership
     {
-        execute::accept_ownership(deps.as_mut(), env, mock_info("jake", &[]).sender).unwrap();
+        execute::accept_ownership(deps.as_mut(), env, mock_info(REGULAR_USER_NAME, &[])).unwrap();
 
         let cfg = query::config(deps.as_ref()).unwrap();
         assert_eq!(
             cfg,
             ConfigResponse {
-                owner: Some(deps.api.addr_validate("jake").unwrap()),
+                owner: Some(deps.api.addr_validate(REGULAR_USER_NAME).unwrap()),
                 new_owner: None,
 
                 fees: FeeConfig {

@@ -34,9 +34,9 @@ pub fn execute(
     match msg {
         // ownership calls
         ExecuteMsg::TransferOwnership { new_owner, blocks } => {
-            execute::transfer_ownership(deps, env, info.sender, new_owner, blocks)
+            execute::transfer_ownership(deps, env, info, new_owner, blocks)
         }
-        ExecuteMsg::AcceptOwnership {} => execute::accept_ownership(deps, env, info.sender),
+        ExecuteMsg::AcceptOwnership {} => execute::accept_ownership(deps, env, info),
         // directory calls
         ExecuteMsg::AddDirectory {
             name,

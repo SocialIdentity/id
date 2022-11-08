@@ -15,6 +15,8 @@ pub enum ContractError {
 
     #[error("Directory: Missing Fee of {fee:?}")]
     MissingFee { fee: Coin },
+    #[error("Directory:No Funds Required")]
+    NoFundsRequired {},
     #[error("Directory: Missing Fee of {fee:?}. received {supplied:?}")]
     InsufficientFee { fee: Coin, supplied: Coin },
     #[error("Directory: entry {name:?} already exists")]
