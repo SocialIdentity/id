@@ -1,0 +1,24 @@
+[package]
+name = "id-shared"
+description = "shared functions for ID"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+documentation = { workspace = true }
+keywords = { workspace = true }
+
+[features]
+backtraces = ["cosmwasm-std/backtraces"]
+library = []
+
+[dependencies]
+cosmwasm-std = { workspace = true }
+cosmwasm-schema = { workspace = true }
+cw20 = { workspace = true }
+thiserror = { workspace = true }
+cw-controllers = { workspace = true }
+cw-storage-plus = {workspace =true}
+id-types = { path = "../../packages/types" }
