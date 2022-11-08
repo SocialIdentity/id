@@ -1,0 +1,13 @@
+{
+  "add_directory": {
+    "name": "foo",
+    "contract": "terra1sj4866m5ae6p0kf8yrn4vk60gyu6tvr7et2yhyxlvnx7pg2rw8ws3vzws8",
+    "ens_type": "CW721",
+    "logo": {
+      "url": "https://example.com"
+    },
+    "socials": {
+      "project": "FOO"
+    }
+  }
+}
