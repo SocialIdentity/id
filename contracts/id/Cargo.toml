@@ -27,7 +27,7 @@ cw-utils = { workspace = true }
 thiserror = { workspace = true }
 semver = { workspace = true }
 id-types = { path = "../../packages/types" }
-
+id-shared = { path = "../../packages/shared" }
 
 [package.metadata.scripts]
 optimize = """docker run --rm -v "$(pwd)":/code \

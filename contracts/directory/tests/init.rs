@@ -3,7 +3,9 @@ use cosmwasm_std::testing::mock_env;
 use cosmwasm_std::Api;
 use cosmwasm_std::Coin;
 use directory::query;
-use id_types::directory::{ConfigResponse, FeeConfig, FeeType};
+use id_types::directory::ConfigResponse;
+use id_types::shared::{FeeConfig, FeeType};
+
 mod common;
 #[test]
 fn initializing() {

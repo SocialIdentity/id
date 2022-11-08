@@ -1,5 +1,6 @@
 use cosmwasm_std::{OverflowError, StdError};
 use cw_controllers::AdminError;
+use id_shared::error::IdSharedError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -9,6 +10,8 @@ pub enum ContractError {
 
     #[error("{0}")]
     Overflow(#[from] OverflowError),
+    #[error("{0}")]
+    IdSharedError(#[from] IdSharedError),
 
     #[error("{0}")]
     AdminError(#[from] AdminError),
@@ -19,6 +22,4 @@ pub enum ContractError {
         expected: String,
         actual: String,
     },
-    #[error("ID: No pending ownership change")]
-    NoPendingOwnerChanges,
 }

@@ -6,7 +6,8 @@ use cosmwasm_std::testing::{mock_env, mock_info};
 use cosmwasm_std::{Api, Coin, StdError};
 use cw20::Logo;
 use directory::{execute, query, ContractError};
-use id_types::directory::{DirectoryRecord, EnsType, Socials};
+use id_types::directory::{DirectoryRecord, EnsType};
+use id_types::shared::Socials;
 
 mod common;
 

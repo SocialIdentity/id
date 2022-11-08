@@ -4,7 +4,7 @@ use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::{Addr, Coin, Empty};
 use cw20::Logo;
 
-use crate::shared::NewOwner;
+use crate::shared::{ENSRecord, ENSResponse, FeeConfig, NewOwner, Socials};
 
 #[cw_serde]
 pub struct InstantiateMsg {
@@ -15,6 +15,8 @@ pub struct InstantiateMsg {
     pub fee_account_type: String,
     /// Fee Account to send fees too
     pub fee_account: String,
+    /// verbotten domains
+    pub blacklist: Vec<BlacklistRecord>,
 }
 
 #[cw_serde]
@@ -26,25 +28,7 @@ pub enum ExecuteMsg {
     },
     /// Accept an ownership transfer
     AcceptOwnership {},
-    /// Add a directory entry
-    AddDirectory {
-        name: String,
-        contract: String,
-        ens_type: String,
-        logo: Option<Logo>,
-        socials: Option<Socials>,
-    },
-    RemoveDirectory {
-        name: String,
-    },
-    UpdateDirectory {
-        name: String,
-        contract: String,
-        ens_type: String,
-        logo: Option<Logo>,
-        socials: Option<Socials>,
-        new_owner: Option<String>, // for admin use only
-    },
+    // fees
     UpdateListingFee {
         fee: Coin,
     },
@@ -54,6 +38,38 @@ pub enum ExecuteMsg {
         fee_account_type: String,
         /// Fee Account to send fees too
         fee_account: String,
+    },
+
+    /// Add a directory entry
+    AddDirectory {
+        name: String,
+        contract: String,
+        ens_type: String,
+        logo: Option<Logo>,
+        socials: Option<Socials>,
+    },
+    /// Remove a directory entry
+    RemoveDirectory {
+        name: String,
+    },
+    /// update a directory entry
+    UpdateDirectory {
+        name: String,
+        contract: String,
+        ens_type: String,
+        logo: Option<Logo>,
+        socials: Option<Socials>,
+        new_owner: Option<String>, // for admin use only
+    },
+
+    /// Add a blacklist entry
+    AddBlackList {
+        name: String,
+        reason: Option<String>,
+    },
+    /// Remove a blacklist entry
+    RemoveBlackList {
+        name: String,
     },
 }
 
@@ -69,25 +85,32 @@ pub enum QueryMsg {
     #[returns(DirectoryRecord)]
     Entry { name: String },
 
-    #[returns(DirectoryResponse)]
+    #[returns(ENSResponse<DirectoryRecord>)]
     Entries {
         start_after: Option<String>,
         limit: Option<u32>,
     },
-    #[returns(DirectoryResponse)]
+    #[returns(ENSResponse<DirectoryRecord>)]
     EntriesContract {
         contract: String,
         start_after: Option<String>,
         limit: Option<u32>,
     },
-    #[returns(DirectoryResponse)]
+    #[returns(ENSResponse<DirectoryRecord>)]
     EntriesOwner {
         owner: String,
         start_after: Option<String>,
         limit: Option<u32>,
     },
+    #[returns(ENSResponse<BlacklistRecord>)]
+    Blacklist { name: String },
+    #[returns(ENSResponse<BlacklistRecord>)]
+    Blacklists {
+        start_after: Option<String>,
+        limit: Option<u32>,
+    },
     // ENS interactions
-    #[returns(ENSResponse)]
+    #[returns(ENSResponse<ENSRecord>)]
     ReverseRecord { address: String },
     // ENS interactions
     #[returns(ENSRecord)]
@@ -101,39 +124,6 @@ pub struct ConfigResponse {
     pub owner: Option<Addr>,
     pub new_owner: Option<NewOwner>,
     pub fees: FeeConfig,
-}
-#[cw_serde]
-pub struct DirectoryResponse {
-    pub entries: Vec<DirectoryRecord>,
-}
-
-#[cw_serde]
-pub enum FeeType {
-    None,
-    Wallet,
-    FeeSplit,
-}
-
-impl FromStr for FeeType {
-    type Err = ();
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "None" => Ok(FeeType::None),
-            "Wallet" => Ok(FeeType::Wallet),
-            "FeeSplit" => Ok(FeeType::FeeSplit),
-            _ => Err(()),
-        }
-    }
-}
-
-impl ToString for FeeType {
-    fn to_string(&self) -> String {
-        match &self {
-            FeeType::Wallet => String::from("Wallet"),
-            FeeType::FeeSplit => String::from("FeeSplit"),
-            FeeType::None => String::from("None"),
-        }
-    }
 }
 
 #[cw_serde]
@@ -163,27 +153,6 @@ impl ToString for EnsType {
 }
 
 #[cw_serde]
-pub struct FeeConfig {
-    pub fee_account_type: FeeType,
-    /// Account to send fees to
-    pub fee_account: Addr,
-    /// Current fee rate
-    pub fee: Coin,
-}
-
-#[cw_serde]
-pub struct Socials {
-    pub project: Option<String>,
-    pub description: Option<String>,
-    pub email: Option<String>,
-    pub twitter: Option<String>,
-    pub telegraph: Option<String>,
-    pub discord: Option<String>,
-    pub web: Option<String>,
-    pub github: Option<String>,
-}
-
-#[cw_serde]
 pub struct DirectoryRecord {
     pub owner: Addr,
     pub name: String,
@@ -192,13 +161,9 @@ pub struct DirectoryRecord {
     pub logo: Option<Logo>,
     pub socials: Option<Socials>,
 }
+
 #[cw_serde]
-pub struct ENSResponse {
-    pub entries: Vec<ENSRecord>,
-}
-#[cw_serde]
-pub struct ENSRecord {
+pub struct BlacklistRecord {
     pub name: String,
-    pub contract: Addr,
-    pub token_id: String,
+    pub reason: Option<String>,
 }

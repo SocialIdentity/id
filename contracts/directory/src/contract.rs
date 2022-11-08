@@ -4,11 +4,12 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 use semver::Version;
 
+use id_shared::{blacklist, fees, ownership};
 use id_types::directory::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 
 use crate::error::ContractError;
-use crate::state::ADMIN;
 use crate::{execute, query};
+use id_shared::state::ADMIN;
 
 pub const CONTRACT_NAME: &str = "crates.io:social-id:directory";
 pub const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -33,10 +34,10 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         // ownership calls
-        ExecuteMsg::TransferOwnership { new_owner, blocks } => {
-            execute::transfer_ownership(deps, env, info, new_owner, blocks)
-        }
-        ExecuteMsg::AcceptOwnership {} => execute::accept_ownership(deps, env, info),
+        ExecuteMsg::TransferOwnership { new_owner, blocks } => Ok(ownership::transfer_ownership(
+            deps, env, info, new_owner, blocks,
+        )?),
+        ExecuteMsg::AcceptOwnership {} => Ok(ownership::accept_ownership(deps, env, info)?),
         // directory calls
         ExecuteMsg::AddDirectory {
             name,
@@ -57,12 +58,24 @@ pub fn execute(
             deps, info, name, contract, ens_type, logo, socials, new_owner,
         ),
         // fee calls
-        ExecuteMsg::UpdateListingFee { fee } => execute::update_listing_fee(deps, info, fee),
+        ExecuteMsg::UpdateListingFee { fee } => Ok(fees::update_listing_fee(deps, info, fee)?),
         ExecuteMsg::UpdateListingFeeAccount {
             fee,
             fee_account_type,
             fee_account,
-        } => execute::update_listing_fee_account(deps, info, fee, fee_account_type, fee_account),
+        } => Ok(fees::update_listing_fee_account(
+            deps,
+            info,
+            fee,
+            fee_account_type,
+            fee_account,
+        )?),
+        ExecuteMsg::AddBlackList { name, reason } => {
+            Ok(blacklist::add_blacklist_entry(deps, info, name, reason)?)
+        }
+        ExecuteMsg::RemoveBlackList { name } => {
+            Ok(blacklist::remove_blacklist_entry(deps, info, name)?)
+        }
     }
 }
 
@@ -92,6 +105,10 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         } => to_binary(&query::entries_owner(deps, owner, start_after, limit)?),
         QueryMsg::ReverseRecord { address } => to_binary(&query::reverse_record(deps, address)?),
         QueryMsg::Resolve { name } => query::resolve(deps, name),
+        QueryMsg::Blacklist { name } => to_binary(&blacklist::query_entry(deps, name)?),
+        QueryMsg::Blacklists { start_after, limit } => {
+            to_binary(&blacklist::query_entries(deps, start_after, limit)?)
+        }
     }
 }
 

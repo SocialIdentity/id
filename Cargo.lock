@@ -357,6 +357,7 @@ dependencies = [
  "cw20 0.16.0",
  "cw721",
  "hex",
+ "id-shared",
  "id-types",
  "pfc-fee-split",
  "semver",
@@ -501,8 +502,22 @@ dependencies = [
  "cw-storage-plus 0.16.0",
  "cw-utils 0.16.0",
  "cw2 0.16.0",
+ "id-shared",
  "id-types",
  "semver",
+ "thiserror",
+]
+
+[[package]]
+name = "id-shared"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-controllers",
+ "cw-storage-plus 0.16.0",
+ "cw20 0.16.0",
+ "id-types",
  "thiserror",
 ]
 

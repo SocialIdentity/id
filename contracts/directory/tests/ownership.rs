@@ -5,9 +5,11 @@ use cosmwasm_std::{
     testing::{mock_env, mock_info},
     Coin,
 };
-use directory::{execute, query, ContractError};
-use id_types::directory::{ConfigResponse, FeeConfig, FeeType};
-use id_types::shared::NewOwner;
+use directory::query;
+use id_shared::error::IdSharedError;
+use id_shared::ownership;
+use id_types::directory::ConfigResponse;
+use id_types::shared::{FeeConfig, FeeType, NewOwner};
 
 #[test]
 fn transferring_ownership() {
@@ -17,7 +19,7 @@ fn transferring_ownership() {
 
     // only owner can propose ownership transfers
     {
-        let err = execute::transfer_ownership(
+        let err = ownership::transfer_ownership(
             deps.as_mut(),
             env.clone(),
             mock_info("plastic", &[]),
@@ -26,14 +28,14 @@ fn transferring_ownership() {
         )
         .unwrap_err();
         match err {
-            ContractError::AdminError { .. } => {}
+            IdSharedError::AdminError { .. } => {}
             _ => assert!(false, "{:?}", err),
         }
     }
 
     // tne owner properly proposes an ownership transfer
     {
-        execute::transfer_ownership(
+        ownership::transfer_ownership(
             deps.as_mut(),
             env.clone(),
             mock_info(ADMIN_NAME, &[]),
@@ -61,15 +63,16 @@ fn accepting_ownership() {
 
     // attempt to accept ownership when there isn't a pending ownership transfer yet
     {
-        let err = execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("plastic", &[]))
-            .unwrap_err();
+        let err =
+            ownership::accept_ownership(deps.as_mut(), env.clone(), mock_info("plastic", &[]))
+                .unwrap_err();
         match err {
-            ContractError::NoPendingOwnerChanges { .. } => {}
+            IdSharedError::NoPendingOwnerChanges { .. } => {}
             _ => assert!(false, "{}", err),
         }
     }
 
-    execute::transfer_ownership(
+    ownership::transfer_ownership(
         deps.as_mut(),
         env.clone(),
         mock_info(ADMIN_NAME, &[]),
@@ -80,17 +83,18 @@ fn accepting_ownership() {
 
     // only the pending owner can accept ownership
     {
-        let err = execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("pumpkin", &[]))
-            .unwrap_err();
+        let err =
+            ownership::accept_ownership(deps.as_mut(), env.clone(), mock_info("pumpkin", &[]))
+                .unwrap_err();
         match err {
-            ContractError::Unauthorized { .. } => {}
+            IdSharedError::Unauthorized { .. } => {}
             _ => assert!(false, "{}", err),
         }
     }
 
     // the pending owner properly accepts ownership
     {
-        execute::accept_ownership(deps.as_mut(), env, mock_info(REGULAR_USER_NAME, &[])).unwrap();
+        ownership::accept_ownership(deps.as_mut(), env, mock_info(REGULAR_USER_NAME, &[])).unwrap();
 
         let cfg = query::config(deps.as_ref()).unwrap();
         assert_eq!(

@@ -5,15 +5,14 @@ use cosmwasm_std::{
 use cw721::TokensResponse;
 use cw_storage_plus::Bound;
 use cw_utils::maybe_addr;
-use id_types::directory::{
-    ConfigResponse, DirectoryRecord, DirectoryResponse, ENSRecord, ENSResponse, EnsType,
-};
+use id_shared::state::FEE;
+use id_shared::{DEFAULT_LIMIT, MAX_LIMIT};
+use id_types::directory::{ConfigResponse, DirectoryRecord, EnsType};
+use id_types::shared::{ENSRecord, ENSResponse};
 use sha3::{Digest, Keccak256};
 
-use crate::state::{directory, ADMIN, FEE, NEW_ADMIN};
-
-const DEFAULT_LIMIT: u32 = 10;
-const MAX_LIMIT: u32 = 30;
+use crate::state::directory;
+use id_shared::state::{ADMIN, NEW_ADMIN};
 
 pub fn config(deps: Deps) -> StdResult<ConfigResponse> {
     let admin = ADMIN.get(deps)?;
@@ -34,7 +33,7 @@ pub fn entries(
     deps: Deps,
     start_after: Option<String>,
     limit: Option<u32>,
-) -> StdResult<DirectoryResponse> {
+) -> StdResult<ENSResponse<DirectoryRecord>> {
     let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
     //    let start_addr = maybe_addr(deps.api, start_after)?;
     let start = start_after.as_ref().map(Bound::exclusive);
@@ -43,7 +42,7 @@ pub fn entries(
         .take(limit)
         .map(|x| x.map(|y| y.1))
         .collect::<StdResult<Vec<DirectoryRecord>>>()?;
-    Ok(DirectoryResponse { entries: res })
+    Ok(ENSResponse { entries: res })
 }
 
 pub fn entries_contract(
@@ -51,7 +50,7 @@ pub fn entries_contract(
     contract: String,
     start_after: Option<String>,
     limit: Option<u32>,
-) -> StdResult<DirectoryResponse> {
+) -> StdResult<ENSResponse<DirectoryRecord>> {
     let contract_addr = deps.api.addr_validate(&contract)?;
     let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
     let start_addr = maybe_addr(deps.api, start_after)?;
@@ -64,7 +63,7 @@ pub fn entries_contract(
         .take(limit)
         .map(|x| x.map(|y| y.1))
         .collect::<StdResult<Vec<DirectoryRecord>>>()?;
-    Ok(DirectoryResponse { entries: res })
+    Ok(ENSResponse { entries: res })
 }
 
 pub fn entries_owner(
@@ -72,7 +71,7 @@ pub fn entries_owner(
     owner: String,
     start_after: Option<String>,
     limit: Option<u32>,
-) -> StdResult<DirectoryResponse> {
+) -> StdResult<ENSResponse<DirectoryRecord>> {
     let owner_addr = deps.api.addr_validate(&owner)?;
     let limit = limit.unwrap_or(DEFAULT_LIMIT).min(MAX_LIMIT) as usize;
     let start_addr = maybe_addr(deps.api, start_after)?;
@@ -85,10 +84,10 @@ pub fn entries_owner(
         .take(limit)
         .map(|x| x.map(|y| y.1))
         .collect::<StdResult<Vec<DirectoryRecord>>>()?;
-    Ok(DirectoryResponse { entries: res })
+    Ok(ENSResponse { entries: res })
 }
 
-pub fn reverse_record(deps: Deps, address: String) -> StdResult<ENSResponse> {
+pub fn reverse_record(deps: Deps, address: String) -> StdResult<ENSResponse<ENSRecord>> {
     let mut responses: Vec<ENSRecord> = vec![];
     deps.api.addr_validate(&address)?;
     let providers = directory()

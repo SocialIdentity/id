@@ -2,7 +2,7 @@ use cosmwasm_std::testing::{mock_dependencies, mock_info, MockApi, MockQuerier, 
 use cosmwasm_std::{BankMsg, Coin, CosmosMsg, Empty, Env, OwnedDeps};
 
 use directory::contract;
-use id_types::directory::InstantiateMsg;
+use id_types::directory::{BlacklistRecord, InstantiateMsg};
 
 pub const ADMIN_NAME: &str = "john";
 #[allow(dead_code)]
@@ -36,6 +36,16 @@ pub fn setup_test(env: Env) -> OwnedDeps<MockStorage, MockApi, MockQuerier, Empt
 
             fee_account_type: "Wallet".to_string(),
             fee_account: FEE_WALLET_NAME.to_string(),
+            blacklist: vec![
+                BlacklistRecord {
+                    name: "banned".to_string(),
+                    reason: None,
+                },
+                BlacklistRecord {
+                    name: "2ban".to_string(),
+                    reason: Some("reason".to_string()),
+                },
+            ],
         },
     )
     .unwrap();

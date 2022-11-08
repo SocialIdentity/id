@@ -3,9 +3,11 @@ use cosmwasm_std::{
 };
 
 use crate::error::ContractError;
-use crate::state::ADMIN;
+
 use crate::{execute, query};
 use cw2::set_contract_version;
+use id_shared::ownership;
+use id_shared::state::ADMIN;
 use id_types::id::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 use semver::Version;
 
@@ -31,10 +33,10 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::TransferOwnership { new_owner, blocks } => {
-            execute::transfer_ownership(deps, env, info.sender, new_owner, blocks)
-        }
-        ExecuteMsg::AcceptOwnership {} => execute::accept_ownership(deps, env, info.sender),
+        ExecuteMsg::TransferOwnership { new_owner, blocks } => Ok(ownership::transfer_ownership(
+            deps, env, info, new_owner, blocks,
+        )?),
+        ExecuteMsg::AcceptOwnership {} => Ok(ownership::accept_ownership(deps, env, info)?),
         ExecuteMsg::TBD { tbd } => execute::tbd(deps, info, tbd),
     }
 }
