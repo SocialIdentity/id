@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, MessageInfo, Response, StdError};
 use cw20::Logo;
-use id_shared::blacklist::init_blacklist;
+use id_shared::blacklist::{init_blacklist, is_blacklisted};
 use id_shared::fees::init_fee;
 use id_shared::state::FEE;
 
@@ -50,6 +50,7 @@ pub fn add_directory_entry(
     if let Some(entry) = entry_exists {
         return Err(ContractError::EntryExists { name: entry.name });
     }
+    is_blacklisted(deps.as_ref(), &name)?;
     let fee_config = FEE.load(deps.storage)?;
     if fee_config.fee_account_type != FeeType::None {
         let fund_amt = info.funds.iter().find(|c| c.denom == fee_config.fee.denom);

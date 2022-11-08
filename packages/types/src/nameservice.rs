@@ -1,8 +1,8 @@
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::{Addr, Coin, Empty};
 
-use crate::shared::{ENSRecord, ENSResponse, FeeConfig, NewOwner};
-
+use crate::shared::{ENSRecord, ENSResponse};
+use crate::shared::{FeeConfig, NewOwner};
 #[cw_serde]
 pub struct InstantiateMsg {
     /// The admin is updatable

@@ -4,8 +4,8 @@ use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::{Addr, Coin, Empty};
 use cw20::Logo;
 
-use crate::shared::{ENSRecord, ENSResponse, FeeConfig, NewOwner, Socials};
-
+use crate::shared::{ENSRecord, ENSResponse};
+use crate::shared::{FeeConfig, NewOwner, Socials};
 #[cw_serde]
 pub struct InstantiateMsg {
     /// The admin is updatable
@@ -63,12 +63,12 @@ pub enum ExecuteMsg {
     },
 
     /// Add a blacklist entry
-    AddBlackList {
+    AddBlacklist {
         name: String,
         reason: Option<String>,
     },
     /// Remove a blacklist entry
-    RemoveBlackList {
+    RemoveBlacklist {
         name: String,
     },
 }

@@ -5,6 +5,15 @@
     "amount": "5"
   },
   "fee_account_type": "Wallet",
-  "fee_account": "terra1yt8xwehw3mngc7h2z09utf32cgpdpe09lke902"
+  "fee_account": "terra1yt8xwehw3mngc7h2z09utf32cgpdpe09lke902",
+  "blacklist": [
+    {
+      "name": "banned"
+    },
+    {
+      "name": "2ban",
+      "reason": "Some Reason"
+    }
+  ]
 }
 

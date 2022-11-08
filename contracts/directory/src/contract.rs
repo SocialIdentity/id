@@ -70,10 +70,10 @@ pub fn execute(
             fee_account_type,
             fee_account,
         )?),
-        ExecuteMsg::AddBlackList { name, reason } => {
+        ExecuteMsg::AddBlacklist { name, reason } => {
             Ok(blacklist::add_blacklist_entry(deps, info, name, reason)?)
         }
-        ExecuteMsg::RemoveBlackList { name } => {
+        ExecuteMsg::RemoveBlacklist { name } => {
             Ok(blacklist::remove_blacklist_entry(deps, info, name)?)
         }
     }

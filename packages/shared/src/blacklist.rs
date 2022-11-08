@@ -26,6 +26,10 @@ pub fn add_blacklist_entry(
 ) -> Result<Response, IdSharedError> {
     ADMIN.assert_admin(deps.as_ref(), &info.sender)?;
 
+    if !info.funds.is_empty() {
+        return Err(IdSharedError::NoFundsRequired {});
+    }
+
     let entry_exists = BLACKLIST.may_load(deps.storage, name.clone())?;
     if let Some(entry) = entry_exists {
         return Err(IdSharedError::BlacklistEntryExists { name: entry.name });
@@ -79,4 +83,17 @@ pub fn query_entries(
         .map(|x| x.map(|y| y.1))
         .collect::<StdResult<Vec<BlacklistRecord>>>()?;
     Ok(ENSResponse { entries: res })
+}
+
+pub fn is_blacklisted(deps: Deps, name: &str) -> Result<(), IdSharedError> {
+    if let Some(blacklist) = BLACKLIST.may_load(deps.storage, name.to_string())? {
+        Err(IdSharedError::Blacklisted {
+            name: blacklist.name,
+            reason: blacklist
+                .reason
+                .unwrap_or_else(|| "-no reason supplied-".to_string()),
+        })
+    } else {
+        Ok(())
+    }
 }

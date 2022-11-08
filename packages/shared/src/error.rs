@@ -27,6 +27,8 @@ pub enum IdSharedError {
     #[error("Directory: blacklist names must be unique")]
     BlacklistNotUnique {},
 
+    #[error("entry {name:?} is blacklisted {reason:?}")]
+    Blacklisted { name: String, reason: String },
     #[error("blacklist entry {name:?} already exists")]
     BlacklistEntryExists { name: String },
     #[error("blacklist entry {name:?} does not exist")]
