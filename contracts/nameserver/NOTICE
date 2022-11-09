@@ -1,4 +1,5 @@
-CW-2981 Token-level Royalties
+Code is based on CW-2981 Token-level Royalties (https://github.com/CosmWasm/cw-nfts/tree/main/contracts/cw2981-royalties)
+which is
 Copyright (C) 2021 Envoy Labs Limited
 
 Licensed under the Apache License, Version 2.0 (the "License");

@@ -1,7 +1,7 @@
 # ID
 Collection of smart contracts for SocialIdentity
 
-* [Directory resolver](./contracts/directory)
+* [Directory resolver](./contracts/directory) DNS like resolver
 * [Factory]() TBD
-* [NameService]() TBD
+* [NameService](./contracts/nameserver) ENS style nameservice
 * [ID]() TBD IBC
