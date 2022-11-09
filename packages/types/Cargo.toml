@@ -14,3 +14,5 @@ keywords = { workspace = true }
 cosmwasm-std = { workspace = true }
 cosmwasm-schema = { workspace = true }
 cw20 = {workspace = true}
+cw721 = {workspace = true}
+cw721-base = {workspace = true, features=["library"]}

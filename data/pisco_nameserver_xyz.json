@@ -1,0 +1,27 @@
+{
+  "admin": "terra1yt8xwehw3mngc7h2z09utf32cgpdpe09lke902",
+  "fee": {
+    "denom": "uluna",
+    "amount": "15"
+  },
+  "fee_account_type": "Wallet",
+  "fee_account": "terra1yt8xwehw3mngc7h2z09utf32cgpdpe09lke902",
+  "blacklist": [
+    {
+      "name": "terra"
+    },
+    {
+      "name": "luna",
+      "reason": "Some Reason"
+    }
+  ],
+  "name": "Xyz Name Server",
+  "suffix": "xyz",
+  "symbol": "xyzNS",
+  "owners_can_burn": true,
+  "owners_can_transfer": false,
+  "verification": false,
+  "verification_keys": [],
+  "renewal_blocks":5256667
+}
+

@@ -1,4 +1,4 @@
-use cosmwasm_std::{OverflowError, StdError};
+use cosmwasm_std::{Coin, OverflowError, StdError};
 use cw_controllers::AdminError;
 use thiserror::Error;
 
@@ -22,6 +22,10 @@ pub enum IdSharedError {
         expected: String,
         actual: String,
     },
+    #[error("Missing Fee of {fee:?}. received {supplied:?}")]
+    InsufficientFee { fee: Coin, supplied: Coin },
+    #[error("Missing Fee of {fee:?}")]
+    MissingFee { fee: Coin },
     #[error("No pending ownership change")]
     NoPendingOwnerChanges,
     #[error("Directory: blacklist names must be unique")]

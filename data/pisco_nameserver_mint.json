@@ -1,0 +1,11 @@
+{
+  "mint": {
+    "token_id": "john",
+    "owner": "foo",
+    "extension": {
+      "image": "https://pbs.twimg.com/profile_images/1586043051608260609/SZh7lXnB_400x400.jpg",
+      "description": "not your usual validator",
+      "name": "PFC"
+    }
+  }
+}

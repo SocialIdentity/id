@@ -70,3 +70,9 @@ pub struct ENSRecord {
 pub struct ENSResponse<T> {
     pub entries: Vec<T>,
 }
+
+#[cw_serde]
+pub struct BlacklistRecord {
+    pub name: String,
+    pub reason: Option<String>,
+}

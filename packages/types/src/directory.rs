@@ -1,11 +1,11 @@
 use std::str::FromStr;
 
+#[allow(unused_imports)]
+use crate::shared::{BlacklistRecord, ENSRecord, ENSResponse};
+use crate::shared::{FeeConfig, NewOwner, Socials};
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::{Addr, Coin, Empty};
 use cw20::Logo;
-
-use crate::shared::{ENSRecord, ENSResponse};
-use crate::shared::{FeeConfig, NewOwner, Socials};
 #[cw_serde]
 pub struct InstantiateMsg {
     /// The admin is updatable
@@ -102,7 +102,7 @@ pub enum QueryMsg {
         start_after: Option<String>,
         limit: Option<u32>,
     },
-    #[returns(ENSResponse<BlacklistRecord>)]
+    #[returns(BlacklistRecord)]
     Blacklist { name: String },
     #[returns(ENSResponse<BlacklistRecord>)]
     Blacklists {
@@ -160,10 +160,4 @@ pub struct DirectoryRecord {
     pub ens_type: EnsType,
     pub logo: Option<Logo>,
     pub socials: Option<Socials>,
-}
-
-#[cw_serde]
-pub struct BlacklistRecord {
-    pub name: String,
-    pub reason: Option<String>,
 }

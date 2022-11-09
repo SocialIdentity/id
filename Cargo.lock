@@ -304,6 +304,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "cw721-base"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77518e27431d43214cff4cdfbd788a7508f68d9b1f32389e6fce513e7eaccbef"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-storage-plus 0.16.0",
+ "cw-utils 0.16.0",
+ "cw2 0.16.0",
+ "cw721",
+ "schemars",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "der"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -509,6 +526,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "id-nameserver"
+version = "0.1.1"
+dependencies = [
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-controllers",
+ "cw-storage-plus 0.16.0",
+ "cw-utils 0.16.0",
+ "cw2 0.16.0",
+ "cw20 0.16.0",
+ "cw721",
+ "cw721-base",
+ "id-shared",
+ "id-types",
+ "schemars",
+ "semver",
+ "thiserror",
+]
+
+[[package]]
 name = "id-shared"
 version = "0.1.1"
 dependencies = [
@@ -518,6 +555,7 @@ dependencies = [
  "cw-storage-plus 0.16.0",
  "cw20 0.16.0",
  "id-types",
+ "pfc-fee-split",
  "thiserror",
 ]
 
@@ -528,6 +566,8 @@ dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw20 0.16.0",
+ "cw721",
+ "cw721-base",
 ]
 
 [[package]]

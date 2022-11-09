@@ -56,7 +56,7 @@ pub fn migrate(deps: DepsMut, _env: Env, _msg: MigrateMsg) -> Result<Response, C
         cw_utils::ensure_from_older_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
 
     // do migration stuff here
-
+    set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     Ok(Response::new()
         .add_attribute("contract_name", CONTRACT_NAME)
         .add_attribute("previous_contract_version", old_version.to_string())

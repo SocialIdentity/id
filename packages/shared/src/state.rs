@@ -1,6 +1,6 @@
 use cw_controllers::Admin;
 use cw_storage_plus::{Item, Map};
-use id_types::directory::BlacklistRecord;
+use id_types::shared::BlacklistRecord;
 
 use id_types::shared::{FeeConfig, NewOwner};
 

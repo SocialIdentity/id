@@ -1,13 +1,12 @@
 use std::str::FromStr;
 
-use cosmwasm_std::{BankMsg, CosmosMsg, DepsMut, MessageInfo, Response, StdError};
+use cosmwasm_std::{DepsMut, MessageInfo, Response, StdError};
 use cw20::Logo;
 use id_shared::blacklist::{init_blacklist, is_blacklisted};
-use id_shared::fees::init_fee;
-use id_shared::state::FEE;
+use id_shared::fees::{gen_fees, init_fee};
 
 use id_types::directory::{DirectoryRecord, EnsType, InstantiateMsg};
-use id_types::shared::{FeeType, Socials};
+use id_types::shared::Socials;
 
 use crate::contract::CONTRACT_NAME;
 use crate::error::ContractError;
@@ -51,22 +50,8 @@ pub fn add_directory_entry(
         return Err(ContractError::EntryExists { name: entry.name });
     }
     is_blacklisted(deps.as_ref(), &name)?;
-    let fee_config = FEE.load(deps.storage)?;
-    if fee_config.fee_account_type != FeeType::None {
-        let fund_amt = info.funds.iter().find(|c| c.denom == fee_config.fee.denom);
-        if let Some(fund_coin) = fund_amt {
-            if fee_config.fee.amount > fund_coin.amount {
-                return Err(ContractError::InsufficientFee {
-                    fee: fee_config.fee,
-                    supplied: fund_coin.clone(),
-                });
-            }
-        } else if !fee_config.fee.amount.is_zero() {
-            return Err(ContractError::MissingFee {
-                fee: fee_config.fee,
-            });
-        }
-    }
+
+    let send_msgs = gen_fees(deps.as_ref(), &info.funds)?;
     let entry = DirectoryRecord {
         owner: info.sender,
         name: name.clone(),
@@ -77,18 +62,6 @@ pub fn add_directory_entry(
     };
     directory().save(deps.storage, name, &entry)?;
 
-    let send_msgs = match fee_config.fee_account_type {
-        FeeType::Wallet => vec![CosmosMsg::Bank(BankMsg::Send {
-            to_address: fee_config.fee_account.to_string(),
-            amount: info.funds,
-        })],
-        FeeType::FeeSplit => {
-            let msg = pfc_fee_split::fee_split_msg::ExecuteMsg::Deposit { flush: false };
-
-            vec![msg.into_cosmos_msg(fee_config.fee_account, info.funds)?]
-        }
-        FeeType::None => vec![],
-    };
     if send_msgs.is_empty() {
         Ok(Response::default()
             .add_attribute("action", format!("{}/add_directory_entry", CONTRACT_NAME)))

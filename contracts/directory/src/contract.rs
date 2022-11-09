@@ -58,24 +58,21 @@ pub fn execute(
             deps, info, name, contract, ens_type, logo, socials, new_owner,
         ),
         // fee calls
-        ExecuteMsg::UpdateListingFee { fee } => Ok(fees::update_listing_fee(deps, info, fee)?),
+        ExecuteMsg::UpdateListingFee { fee } => {
+            fees::update_listing_fee(deps, info, fee).map_err(ContractError::IdSharedError)
+        }
         ExecuteMsg::UpdateListingFeeAccount {
             fee,
             fee_account_type,
             fee_account,
-        } => Ok(fees::update_listing_fee_account(
-            deps,
-            info,
-            fee,
-            fee_account_type,
-            fee_account,
-        )?),
+        } => fees::update_listing_fee_account(deps, info, fee, fee_account_type, fee_account)
+            .map_err(ContractError::IdSharedError),
         ExecuteMsg::AddBlacklist { name, reason } => {
-            Ok(blacklist::add_blacklist_entry(deps, info, name, reason)?)
+            blacklist::add_blacklist_entry(deps, info, name, reason)
+                .map_err(ContractError::IdSharedError)
         }
-        ExecuteMsg::RemoveBlacklist { name } => {
-            Ok(blacklist::remove_blacklist_entry(deps, info, name)?)
-        }
+        ExecuteMsg::RemoveBlacklist { name } => blacklist::remove_blacklist_entry(deps, info, name)
+            .map_err(ContractError::IdSharedError),
     }
 }
 

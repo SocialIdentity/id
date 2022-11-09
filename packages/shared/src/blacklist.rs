@@ -5,7 +5,7 @@ use std::collections::HashSet;
 
 use crate::error::IdSharedError;
 use crate::{DEFAULT_LIMIT, MAX_LIMIT};
-use id_types::directory::BlacklistRecord;
+use id_types::shared::BlacklistRecord;
 use id_types::shared::ENSResponse;
 
 pub fn init_blacklist(deps: DepsMut, blacklist: Vec<BlacklistRecord>) -> Result<(), IdSharedError> {

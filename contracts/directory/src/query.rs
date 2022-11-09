@@ -6,7 +6,7 @@ use cw721::TokensResponse;
 use cw_storage_plus::Bound;
 use cw_utils::maybe_addr;
 use id_shared::state::FEE;
-use id_shared::{DEFAULT_LIMIT, MAX_LIMIT};
+use id_shared::{is_separator, DEFAULT_LIMIT, MAX_LIMIT};
 use id_types::directory::{ConfigResponse, DirectoryRecord, EnsType};
 use id_types::shared::{ENSRecord, ENSResponse};
 use sha3::{Digest, Keccak256};
@@ -142,10 +142,10 @@ pub fn resolve(deps: Deps, name: String) -> StdResult<Binary> {
         Err(StdError::generic_err("malformed name".to_string()))
     }
 }
-pub(crate) fn is_separator(char: char) -> bool {
+/*pub(crate) fn is_separator(char: char) -> bool {
     char == '.' || char == '@' || char == '/'
 }
-
+*/
 pub(crate) fn gen_token_id(ens: &EnsType, name: &str) -> StdResult<String> {
     match ens {
         EnsType::Lns => {

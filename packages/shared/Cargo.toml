@@ -22,3 +22,4 @@ thiserror = { workspace = true }
 cw-controllers = { workspace = true }
 cw-storage-plus = {workspace =true}
 id-types = { path = "../../packages/types" }
+pfc-fee-split = { workspace = true }

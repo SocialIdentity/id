@@ -1,0 +1,16 @@
+{
+  "add_directory": {
+    "name": "xyz",
+    "contract": "terra1y2nmmk4kfcknc2f6cgxluls9ex66arcyekcxudde7uk9lr9072wst0lrsz",
+    "ens_type": "CW721",
+    "logo": {
+      "url": "https://pfc-validator.github.io/assets/img/pete.jpg"
+    },
+    "socials": {
+      "project": "PFC",
+      "description": "PFC",
+      "twitter": "@PFC_validator",
+      "web": "https://pfc-validator.github.io/"
+    }
+  }
+}
