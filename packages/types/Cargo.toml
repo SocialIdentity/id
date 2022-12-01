@@ -1,5 +1,5 @@
 [package]
-name = "id-types"
+name = "social-id-types"
 description = "message types for ID"
 version = { workspace = true }
 authors = { workspace = true }

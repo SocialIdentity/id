@@ -1,10 +1,13 @@
 mod common;
+
 use crate::common::setup_test;
 use cosmwasm_std::testing::{mock_env, mock_info};
 use cosmwasm_std::Api;
-use id::{execute, query, ContractError};
-use id_types::id::ConfigResponse;
-use id_types::shared::NewOwner;
+use social_id_contract::query;
+use social_id_shared::error::IdSharedError;
+use social_id_types::id::ConfigResponse;
+use social_id_types::shared::NewOwner;
+use social_id_shared::ownership::{accept_ownership, transfer_ownership};
 
 #[test]
 fn transferring_ownership() {
@@ -14,37 +17,37 @@ fn transferring_ownership() {
 
     // only owner can propose ownership transferrs
     {
-        let err = execute::transfer_ownership(
+        let err = transfer_ownership(
             deps.as_mut(),
             env.clone(),
-            mock_info("plastic", &[]).sender,
+            mock_info("plastic", &[]),
             "plastic".into(),
             500,
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
-            ContractError::AdminError { .. } => {}
+            IdSharedError::AdminError { .. } => {}
             _ => assert!(false, "{:?}", err),
         }
     }
 
     // tne owner properly proposes an ownership transfer
     {
-        execute::transfer_ownership(
+        transfer_ownership(
             deps.as_mut(),
             env.clone(),
-            mock_info("john", &[]).sender,
+            mock_info("john", &[]),
             "jake".into(),
             500,
         )
-        .unwrap();
+            .unwrap();
 
         let cfg = query::config(deps.as_ref()).unwrap();
         assert_eq!(
             cfg.new_owner,
             Some(NewOwner {
                 new_owner: deps.api.addr_validate("jake").unwrap(),
-                block_height: env.block.height + 500
+                block_height: env.block.height + 500,
             })
         );
     }
@@ -59,37 +62,37 @@ fn accepting_ownership() {
     // attempt to accept ownership when there isn't a pending ownership transfer yet
     {
         let err =
-            execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("plastic", &[]).sender)
+            accept_ownership(deps.as_mut(), env.clone(), mock_info("plastic", &[]))
                 .unwrap_err();
         match err {
-            ContractError::NoPendingOwnerChanges { .. } => {}
+            IdSharedError::NoPendingOwnerChanges { .. } => {}
             _ => assert!(false, "{}", err),
         }
     }
 
-    execute::transfer_ownership(
+    transfer_ownership(
         deps.as_mut(),
         env.clone(),
-        mock_info("john", &[]).sender,
+        mock_info("john", &[]),
         "jake".into(),
         1000,
     )
-    .unwrap();
+        .unwrap();
 
     // only the pending owner can accept ownership
     {
         let err =
-            execute::accept_ownership(deps.as_mut(), env.clone(), mock_info("pumpkin", &[]).sender)
+            accept_ownership(deps.as_mut(), env.clone(), mock_info("pumpkin", &[]))
                 .unwrap_err();
         match err {
-            ContractError::Unauthorized { .. } => {}
+            IdSharedError::Unauthorized { .. } => {}
             _ => assert!(false, "{}", err),
         }
     }
 
     // the pending owner properly accepts ownership
     {
-        execute::accept_ownership(deps.as_mut(), env, mock_info("jake", &[]).sender).unwrap();
+        accept_ownership(deps.as_mut(), env, mock_info("jake", &[])).unwrap();
 
         let cfg = query::config(deps.as_ref()).unwrap();
         assert_eq!(

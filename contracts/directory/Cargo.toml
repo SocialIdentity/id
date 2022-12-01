@@ -1,5 +1,5 @@
 [package]
-name = "directory"
+name = "social-directory"
 description = "Directory Contract"
 version = { workspace = true }
 authors = { workspace = true }
@@ -26,10 +26,11 @@ cw721 = {workspace = true }
 cw-storage-plus = { workspace = true }
 cw-controllers = { workspace = true }
 cw-utils = { workspace = true }
+getrandom = {workspace=true}
 thiserror = { workspace = true }
 semver = { workspace = true }
-id-types = { path = "../../packages/types" }
-id-shared = { path = "../../packages/shared" }
+social-id-types = { path = "../../packages/types" }
+social-id-shared = { path = "../../packages/shared" }
 pfc-fee-split = { workspace = true }
 sha3 = {workspace = true, default-features=false }
 hex = {workspace = true}
@@ -39,8 +40,12 @@ hex = {workspace = true}
 optimize = """docker run --rm -v "$(pwd)":/code \
           --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
             --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
-              cosmwasm/rust-optimizer:0.12.9"""
+              cosmwasm/rust-optimizer:0.12.10"""
+optimize-arm64 = """docker run --rm -v "$(pwd)":/code \
+          --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+              cosmwasm/rust-optimizer-arm64:0.12.10"""
 optimize-w32 = """docker run --rm -v c:\\pfc\\SocialIdentity\\id:/code  \
             --mount type=volume,source=socialid_id_cache,target=/code/target \
             --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
-            cosmwasm/rust-optimizer:0.12.9"""
+            cosmwasm/rust-optimizer:0.12.10"""

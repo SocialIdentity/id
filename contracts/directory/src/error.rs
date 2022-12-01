@@ -1,6 +1,6 @@
 use cosmwasm_std::{Coin, OverflowError, StdError};
 use cw_controllers::AdminError;
-use id_shared::error::IdSharedError;
+use social_id_shared::error::IdSharedError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]

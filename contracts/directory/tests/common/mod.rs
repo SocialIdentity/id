@@ -1,9 +1,9 @@
 use cosmwasm_std::testing::{mock_dependencies, mock_info, MockApi, MockQuerier, MockStorage};
 use cosmwasm_std::{BankMsg, Coin, CosmosMsg, Empty, Env, OwnedDeps};
 
-use directory::contract;
-use id_types::directory::InstantiateMsg;
-use id_types::shared::BlacklistRecord;
+use social_directory::contract;
+use social_id_types::directory::InstantiateMsg;
+use social_id_types::shared::BlacklistRecord;
 
 pub const ADMIN_NAME: &str = "john";
 #[allow(dead_code)]

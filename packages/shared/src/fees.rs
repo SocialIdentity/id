@@ -2,7 +2,7 @@ use crate::error::IdSharedError;
 use crate::state::{ADMIN, FEE};
 use cosmwasm_std::{BankMsg, Coin, CosmosMsg, Deps, DepsMut, MessageInfo, Response, StdError};
 
-use id_types::shared::{FeeConfig, FeeType};
+use social_id_types::shared::{FeeConfig, FeeType};
 use std::str::FromStr;
 
 pub fn init_fee(

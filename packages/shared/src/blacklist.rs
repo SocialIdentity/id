@@ -5,8 +5,8 @@ use std::collections::HashSet;
 
 use crate::error::IdSharedError;
 use crate::{DEFAULT_LIMIT, MAX_LIMIT};
-use id_types::shared::BlacklistRecord;
-use id_types::shared::ENSResponse;
+use social_id_types::shared::BlacklistRecord;
+use social_id_types::shared::ENSResponse;
 
 pub fn init_blacklist(deps: DepsMut, blacklist: Vec<BlacklistRecord>) -> Result<(), IdSharedError> {
     let dupe_check: HashSet<String> = blacklist.iter().map(|v| v.name.clone()).collect();

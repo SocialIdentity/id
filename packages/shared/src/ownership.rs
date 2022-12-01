@@ -5,7 +5,7 @@ use cosmwasm_std::Response;
 use cosmwasm_std::{Env, MessageInfo};
 
 use crate::state::{ADMIN, NEW_ADMIN};
-use id_types::shared::NewOwner;
+use social_id_types::shared::NewOwner;
 
 pub fn transfer_ownership(
     deps: DepsMut,

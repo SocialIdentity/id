@@ -2,14 +2,14 @@ use cosmwasm_std::{Binary, Deps, Env, Order, StdResult};
 
 use cw721_base::QueryMsg;
 use cw_storage_plus::Bound;
-use id_shared::{DEFAULT_LIMIT, MAX_LIMIT};
+use social_id_shared::{DEFAULT_LIMIT, MAX_LIMIT};
 
-use id_shared::state::{ADMIN, FEE, NEW_ADMIN};
+use social_id_shared::state::{ADMIN, FEE, NEW_ADMIN};
 
 use crate::state::{verifiers, NAMESERVER_CONFIG};
 use crate::NameServerContract;
-use id_types::nameserver::{ConfigResponse, Extension, VerifyRecord};
-use id_types::shared::{ENSRecord, ENSResponse};
+use social_id_types::nameserver::{ConfigResponse, Extension, VerifyRecord};
+use social_id_types::shared::{ENSRecord, ENSResponse};
 
 pub fn config(deps: Deps) -> StdResult<ConfigResponse> {
     let admin = ADMIN.get(deps)?;
@@ -85,7 +85,7 @@ pub fn reverse_record(deps: Deps, env: Env, address: String) -> StdResult<ENSRes
     for x in recs? {
         let meta: Extension = x.1.extension;
 
-        if meta.verified.unwrap_or_else(|| false)
+        if meta.verified.unwrap_or(false)
             && meta.verification_expires.unwrap_or(env.block.height + 1) > env.block.height
             && meta.expires.unwrap_or(env.block.height + 1) > env.block.height
         {

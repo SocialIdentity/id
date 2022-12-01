@@ -5,14 +5,14 @@ use cosmwasm_std::{
 use cw721::TokensResponse;
 use cw_storage_plus::Bound;
 use cw_utils::maybe_addr;
-use id_shared::state::FEE;
-use id_shared::{is_separator, DEFAULT_LIMIT, MAX_LIMIT};
-use id_types::directory::{ConfigResponse, DirectoryRecord, EnsType};
-use id_types::shared::{ENSRecord, ENSResponse};
+use social_id_shared::state::FEE;
+use social_id_shared::{is_separator, DEFAULT_LIMIT, MAX_LIMIT};
+use social_id_types::directory::{ConfigResponse, DirectoryRecord, EnsType};
+use social_id_types::shared::{ENSRecord, ENSResponse};
 use sha3::{Digest, Keccak256};
 
 use crate::state::directory;
-use id_shared::state::{ADMIN, NEW_ADMIN};
+use social_id_shared::state::{ADMIN, NEW_ADMIN};
 
 pub fn config(deps: Deps) -> StdResult<ConfigResponse> {
     let admin = ADMIN.get(deps)?;

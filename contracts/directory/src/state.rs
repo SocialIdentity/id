@@ -1,7 +1,7 @@
 use cosmwasm_std::Addr;
 use cw_storage_plus::{Index, IndexList, IndexedMap, MultiIndex};
 
-use id_types::directory::DirectoryRecord;
+use social_id_types::directory::DirectoryRecord;
 
 pub(crate) const DIRECTORY_KEY: &str = "directory_001";
 pub(crate) const DIRECTORY_OWNER_KEY: &str = "directory_owner_001";

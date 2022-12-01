@@ -9,7 +9,7 @@ use cw721::{
     OperatorsResponse, OwnerOfResponse, TokensResponse,
 };
 use cw721_base::{ExecuteMsg, Extension, InstantiateMsg, MinterResponse, QueryMsg};
-use id_types::nameserver::{NameServerExecuteMsg, NameServerQueryMsg};
+use social_id_types::nameserver::{NameServerExecuteMsg, NameServerQueryMsg};
 
 fn main() {
     let mut out_dir = current_dir().unwrap();

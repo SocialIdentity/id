@@ -2,11 +2,12 @@ use crate::common::setup_test;
 use cosmwasm_std::testing::mock_env;
 use cosmwasm_std::Api;
 use cosmwasm_std::Coin;
-use directory::query;
-use id_types::directory::ConfigResponse;
-use id_types::shared::{FeeConfig, FeeType};
+use social_directory::query;
+use social_id_types::directory::ConfigResponse;
+use social_id_types::shared::{FeeConfig, FeeType};
 
 mod common;
+
 #[test]
 fn initializing() {
     let env = mock_env();
@@ -22,8 +23,8 @@ fn initializing() {
             fees: FeeConfig {
                 fee_account_type: FeeType::Wallet,
                 fee_account: deps.api.addr_validate("fee_wallet").unwrap(),
-                fee: Coin::new(5u128, "udenom")
-            }
+                fee: Coin::new(5u128, "udenom"),
+            },
         },
     );
 }

@@ -5,11 +5,11 @@ use cosmwasm_std::{
     testing::{mock_env, mock_info},
     Coin,
 };
-use directory::query;
-use id_shared::error::IdSharedError;
-use id_shared::ownership;
-use id_types::directory::ConfigResponse;
-use id_types::shared::{FeeConfig, FeeType, NewOwner};
+use social_directory::query;
+use social_id_shared::error::IdSharedError;
+use social_id_shared::ownership;
+use social_id_types::directory::ConfigResponse;
+use social_id_types::shared::{FeeConfig, FeeType, NewOwner};
 
 #[test]
 fn transferring_ownership() {

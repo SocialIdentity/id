@@ -5,9 +5,10 @@ use crate::common::{
 use cosmwasm_std::testing::{mock_env, mock_info};
 use cosmwasm_std::{Api, Coin, StdError};
 use cw20::Logo;
-use directory::{execute, query, ContractError};
-use id_types::directory::{DirectoryRecord, EnsType};
-use id_types::shared::Socials;
+use social_directory::{execute, query, ContractError};
+use social_id_shared::error::IdSharedError;
+use social_id_types::directory::{DirectoryRecord, EnsType};
+use social_id_types::shared::Socials;
 
 mod common;
 
@@ -28,9 +29,9 @@ fn add_entry() {
             None,
             None,
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
-            ContractError::MissingFee { .. } => {}
+            ContractError::IdSharedError(IdSharedError::MissingFee { .. }) => {}
             _ => assert!(false, "{:?}", err),
         }
     }
@@ -46,9 +47,9 @@ fn add_entry() {
             None,
             None,
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
-            ContractError::InsufficientFee { .. } => {}
+            ContractError::IdSharedError(IdSharedError::InsufficientFee { .. }) => {}
             _ => assert!(false, "{:?}", err),
         }
     }
@@ -63,9 +64,10 @@ fn add_entry() {
             None,
             None,
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
-            ContractError::MissingFee { .. } => {}
+            ContractError::IdSharedError(IdSharedError::MissingFee { .. }) => {}
+
             _ => assert!(false, "{:?}", err),
         }
     }
@@ -89,7 +91,7 @@ fn add_entry() {
                 github: None,
             }),
         )
-        .unwrap();
+            .unwrap();
 
         assert_eq!(1, res.messages.len());
         assert_eq!(default_fee_msg(), res.messages.first().unwrap().msg);
@@ -110,7 +112,7 @@ fn add_entry() {
                     telegraph: None,
                     discord: None,
                     web: None,
-                    github: None
+                    github: None,
                 }),
             },
             provider_abc
@@ -131,7 +133,7 @@ fn add_entry() {
             None,
             None,
         )
-        .unwrap();
+            .unwrap();
         assert_eq!(1, res.messages.len());
         assert_eq!(default_fee_msg(), res.messages.first().unwrap().msg);
         let provider_foo = query::entry(deps.as_ref(), "foo".into()).unwrap();
@@ -180,7 +182,7 @@ fn modify_entry() {
                 github: None,
             }),
         )
-        .unwrap();
+            .unwrap();
 
         assert_eq!(1, res.messages.len());
         assert_eq!(default_fee_msg(), res.messages.first().unwrap().msg);
@@ -194,7 +196,7 @@ fn modify_entry() {
             None,
             None,
         )
-        .unwrap();
+            .unwrap();
 
         assert_eq!(1, res.messages.len());
         assert_eq!(default_fee_msg(), res.messages.first().unwrap().msg);
@@ -220,7 +222,7 @@ fn modify_entry() {
             None,
             None,
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
             ContractError::Unauthorized { .. } => {}
             _ => assert!(false, "{:?}", err),
@@ -235,7 +237,7 @@ fn modify_entry() {
             None,
             Some("james".into()),
         )
-        .unwrap();
+            .unwrap();
 
         let providers = query::entries(deps.as_ref(), None, None).unwrap();
         assert_eq!(2, providers.entries.len());
@@ -280,7 +282,7 @@ fn remove_entry() {
                 github: None,
             }),
         )
-        .unwrap();
+            .unwrap();
 
         assert_eq!(1, res.messages.len());
         assert_eq!(default_fee_msg(), res.messages.first().unwrap().msg);
@@ -294,7 +296,7 @@ fn remove_entry() {
             None,
             None,
         )
-        .unwrap();
+            .unwrap();
 
         assert_eq!(1, res.messages.len());
         assert_eq!(default_fee_msg(), res.messages.first().unwrap().msg);
@@ -315,7 +317,7 @@ fn remove_entry() {
             mock_info("pumpkin", &[]),
             "abc".to_string(),
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
             ContractError::Unauthorized { .. } => {}
             _ => assert!(false, "{:?}", err),
@@ -325,7 +327,7 @@ fn remove_entry() {
             mock_info("pumpkin", &[]),
             "def".to_string(),
         )
-        .unwrap_err();
+            .unwrap_err();
         match err {
             ContractError::EntryDoesntExist { .. } => {}
             _ => assert!(false, "{:?}", err),
@@ -336,7 +338,7 @@ fn remove_entry() {
             mock_info("pumpkin", &[]),
             "foo".to_string(),
         )
-        .unwrap();
+            .unwrap();
 
         let providers = query::entries(deps.as_ref(), None, None).unwrap();
         assert_eq!(1, providers.entries.len());

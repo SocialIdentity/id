@@ -1,9 +1,10 @@
 [workspace]
 members = [
   "packages/*",
-  "contracts/*"
+  "contracts/*",
 ]
 [workspace.package]
+#name = "social-id"
 version = "0.1.1"
 authors = ["PFC <PFC-Validator@protonmail.com>"]
 edition = "2021"
@@ -12,32 +13,34 @@ homepage = "https://pfc-validator.github.io/"
 repository = "https://github.com/SocialIdentity/id"
 documentation = "https://github.com/SocialIdentity/id#README"
 keywords = ["blockchain", "cosmos", "cosmwasm"]
+rust-version  = "1.64.0"
 
 [workspace.dependencies]
 cosmwasm-schema = "1.1"
+getrandom = {version="0.2.8",features=["js"]}
 cosmwasm-std = "1.1"
-cw2 = "0.16"
-cw20 = "0.16.0"
+cw2 = "1.0.0"
+cw20 = "1.0.0"
 cw721 = "0.16.0"
-cw721-base = { version = "0.16.0", features = ["library", ] }
-cw-controllers = "0.16"
-cw-storage-plus = "0.16"
-cw-utils = "0.16"
+cw721-base = { version = "0.16.0", features = ["library" ] }
+cw-controllers = "1.0.0"
+cw-storage-plus = "1.0.0"
+cw-utils = "1.0.0"
 hex = "0.4.3"
 thiserror = "1.0"
 semver = "1"
-schemars        = "0.8.10"
-serde           = { version = "1.0.140", default-features = false, features = ["derive"] }
-pfc-fee-split = "0.1.1"
-#rust-crypto = {version =  "0.2.36", default-features =false}
+schemars = "0.8.10"
+serde = { version = "1.0.140", default-features = false, features = ["derive"] }
+pfc-fee-split = "0.2.3"
 sha3 = { version = "0.10.6", default-features = false }
 
-[profile.release.package.id-types]
+[profile.release.package.social-id-types]
 codegen-units = 1
 incremental = false
 
-
 [profile.release]
+codegen-units = 1
+incremental=false
 rpath = false
 lto = true
 overflow-checks = true
@@ -45,3 +48,13 @@ opt-level = 3
 debug = false
 debug-assertions = false
 
+#[workspace.package.metadata.scripts]
+#optimize = """docker run --rm -v "$(pwd)":/code \
+#          --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+#            --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+#              cosmwasm/workspace-optimizer:0.12.10"""
+
+#optimize-arm = """docker run --rm -v "$(pwd)":/code \
+ #         --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+ #           --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+ #             cosmwasm/workspace-optimizer-arm64:0.12.10              """

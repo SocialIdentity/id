@@ -1,15 +1,15 @@
 use cosmwasm_std::{DepsMut, Env, MessageInfo, Response};
 
 use cw721_base::{ExecuteMsg, MintMsg};
-use id_shared::blacklist::{init_blacklist, is_blacklisted};
-use id_shared::fees::{gen_fees, init_fee};
+use social_id_shared::blacklist::{init_blacklist, is_blacklisted};
+use social_id_shared::fees::{gen_fees, init_fee};
 
-use id_types::nameserver::{InstantiateMsg, VerifyRecord};
+use social_id_types::nameserver::{InstantiateMsg, VerifyRecord};
 
 use crate::error::ContractError;
 use crate::state::{verifiers, NameServerConfig, NAMESERVER_CONFIG};
 use crate::{MintExtension, NameServerContract};
-use id_shared::state::ADMIN;
+use social_id_shared::state::ADMIN;
 
 pub fn instantiate(
     resp: Response,

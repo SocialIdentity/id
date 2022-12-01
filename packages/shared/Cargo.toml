@@ -1,5 +1,5 @@
 [package]
-name = "id-shared"
+name = "social-id-shared"
 description = "shared functions for ID"
 version = { workspace = true }
 authors = { workspace = true }
@@ -21,5 +21,5 @@ cw20 = { workspace = true }
 thiserror = { workspace = true }
 cw-controllers = { workspace = true }
 cw-storage-plus = {workspace =true}
-id-types = { path = "../../packages/types" }
+social-id-types = { path = "../../packages/types" }
 pfc-fee-split = { workspace = true }

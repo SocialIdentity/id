@@ -1,8 +1,8 @@
 use cw_controllers::Admin;
 use cw_storage_plus::{Item, Map};
-use id_types::shared::BlacklistRecord;
+use social_id_types::shared::BlacklistRecord;
 
-use id_types::shared::{FeeConfig, NewOwner};
+use social_id_types::shared::{FeeConfig, NewOwner};
 
 pub(crate) const ADMIN_KEY: &str = "admin_001";
 pub(crate) const NEW_ADMIN_KEY: &str = "new_admin_001";

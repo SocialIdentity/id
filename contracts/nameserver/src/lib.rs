@@ -13,8 +13,8 @@ pub use cw721_base::{
     ContractError as CW721ContractError, InstantiateMsg as CW721InstantiateMsg, MintMsg,
     MinterResponse,
 };
-use id_shared::state::ADMIN;
-use id_types::nameserver::{Extension, NameServerExecuteMsg, NameServerQueryMsg};
+use social_id_shared::state::ADMIN;
+use social_id_types::nameserver::{Extension, NameServerExecuteMsg, NameServerQueryMsg};
 // Version info for migration
 const CONTRACT_NAME: &str = "crates.io:id-nameserver";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -32,8 +32,8 @@ pub mod entry {
     use crate::query::{resolve, reverse_record, verifier, verifier_public_key, verifier_table};
     use cosmwasm_std::entry_point;
     use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
-    use id_shared::{blacklist, fees, ownership};
-    use id_types::nameserver::{InstantiateMsg, MigrateMsg};
+    use social_id_shared::{blacklist, fees, ownership};
+    use social_id_types::nameserver::{InstantiateMsg, MigrateMsg};
     use semver::Version;
 
     #[cfg_attr(not(feature = "library"), entry_point)]

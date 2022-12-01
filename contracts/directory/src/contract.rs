@@ -4,12 +4,12 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 use semver::Version;
 
-use id_shared::{blacklist, fees, ownership};
-use id_types::directory::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
+use social_id_shared::{blacklist, fees, ownership};
+use social_id_types::directory::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 
 use crate::error::ContractError;
 use crate::{execute, query};
-use id_shared::state::ADMIN;
+use social_id_shared::state::ADMIN;
 
 pub const CONTRACT_NAME: &str = "crates.io:social-id:directory";
 pub const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");

@@ -1,7 +1,7 @@
 use cosmwasm_std::{Coin, Deps, StdResult, Uint128};
-use id_shared::state::{ADMIN, NEW_ADMIN};
+use social_id_shared::state::{ADMIN, NEW_ADMIN};
 
-use id_types::id::ConfigResponse;
+use social_id_types::id::ConfigResponse;
 
 pub fn config(deps: Deps) -> StdResult<ConfigResponse> {
     let admin = ADMIN.get(deps)?;

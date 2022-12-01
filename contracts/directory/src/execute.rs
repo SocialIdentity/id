@@ -2,16 +2,17 @@ use std::str::FromStr;
 
 use cosmwasm_std::{DepsMut, MessageInfo, Response, StdError};
 use cw20::Logo;
-use id_shared::blacklist::{init_blacklist, is_blacklisted};
-use id_shared::fees::{gen_fees, init_fee};
+use social_id_shared::blacklist::{init_blacklist, is_blacklisted};
+use social_id_shared::fees::{gen_fees, init_fee};
 
-use id_types::directory::{DirectoryRecord, EnsType, InstantiateMsg};
-use id_types::shared::Socials;
+use social_id_types::directory::{DirectoryRecord, EnsType, InstantiateMsg};
+use social_id_types::shared::Socials;
 
 use crate::contract::CONTRACT_NAME;
 use crate::error::ContractError;
 use crate::state::directory;
-use id_shared::state::ADMIN;
+use social_id_shared::state::ADMIN;
+
 pub fn instantiate(mut deps: DepsMut, msg: InstantiateMsg) -> Result<Response, ContractError> {
     let admin_addr = msg
         .admin

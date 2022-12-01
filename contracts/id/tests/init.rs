@@ -1,8 +1,8 @@
 use crate::common::setup_test;
 use cosmwasm_std::testing::mock_env;
 use cosmwasm_std::Api;
-use id::query;
-use id_types::id::ConfigResponse;
+use social_id_contract::query;
+use social_id_types::id::ConfigResponse;
 mod common;
 #[test]
 

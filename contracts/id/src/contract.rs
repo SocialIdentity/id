@@ -6,9 +6,9 @@ use crate::error::ContractError;
 
 use crate::{execute, query};
 use cw2::set_contract_version;
-use id_shared::ownership;
-use id_shared::state::ADMIN;
-use id_types::id::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
+use social_id_shared::ownership;
+use social_id_shared::state::ADMIN;
+use social_id_types::id::{ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg};
 use semver::Version;
 
 pub const CONTRACT_NAME: &str = "crates.io:social-id:id";

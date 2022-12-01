@@ -1,7 +1,7 @@
 use cosmwasm_std::{DepsMut, MessageInfo, Response};
-use id_shared::state::ADMIN;
+use social_id_shared::state::ADMIN;
 
-use id_types::id::InstantiateMsg;
+use social_id_types::id::InstantiateMsg;
 
 use crate::error::ContractError;
 

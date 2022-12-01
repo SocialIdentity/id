@@ -1,6 +1,6 @@
 use cosmwasm_schema::cw_serde;
 use cw_storage_plus::{Index, IndexList, IndexedMap, Item, MultiIndex};
-use id_types::nameserver::VerifyRecord;
+use social_id_types::nameserver::VerifyRecord;
 
 pub(crate) const VERIFIER_KEY: &str = "verifier_001";
 pub(crate) const VERIFIER_OWNER_KEY: &str = "verifier_pubkey_001";
