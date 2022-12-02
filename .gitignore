@@ -23,4 +23,4 @@ packages/*/schema
 contracts/*/schema
 /schema
 
-/notes
+#/notes
